@@ -7,12 +7,14 @@ import (
 func main() {
 	r := gin.Default()
 	r.GET("/newUser", newUser)
-	r.Run() // listen and serve on 0.0.0.0:8181
+	r.Run()
 }
+
+var gen = Generate
 
 func newUser(c *gin.Context) {
   c.JSON(200, gin.H{
-			"userID":   "abc123",
+			"userID": gen(6),
 		},
 	)
 }

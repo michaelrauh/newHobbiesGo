@@ -8,18 +8,27 @@ import (
 	"os"
 )
 
-
 func TestMain(m *testing.M) {
 	gin.SetMode(gin.TestMode)
 	os.Exit(m.Run())
 }
 
 func TestThatnewUserReturnsOK(t *testing.T) {
+	oldGen := gen
+	defer func () { gen = oldGen }()
+
+	gen = func(in int) string {
+		if in != 6 {
+			t.Errorf("length of id not what expected, got: %d, want: %d.", in, 6)
+		}
+  	return "abc123"
+	}
+
 	r := gin.Default()
 	r.GET("/newUser", newUser)
 	req, _ := http.NewRequest("GET", "/newUser", nil)
 	w := httptest.NewRecorder()
-  
+
 	r.ServeHTTP(w, req)
 
 	if w.Code != 200 {
