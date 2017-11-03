@@ -6,23 +6,23 @@ import (
 )
 
 func TestThatStartingTheDatabaseDoesntResultInPanic(t *testing.T) {
-	db := Start()
+	db := start()
 
 	if db == nil {
 		t.Fail()
 	}
-	Stop(db)
+	stop(db)
 	os.Remove("test.db")
 }
 
 func TestThatAddUserCreatesANewUser(t *testing.T) {
-	db := Start()
+	db := start()
 	var count int
-	AddUser(db, "some_guid")
+	addUser(db, "some_guid")
 	db.Table("users").Count(&count)
 	if count != 1 {
 		t.Fail()
 	}
-	Stop(db)
+	stop(db)
 	os.Remove("test.db")
 }

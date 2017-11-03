@@ -7,11 +7,11 @@ import (
 
 var r = gin.Default()
 var gen = Generate
-var add = AddUser
+var add = addUser
 var db *gorm.DB
 
 func main() {
-	db = Start()
+	db = start()
 	r.GET("/newUser", newUser)
 	r.Run()
 }

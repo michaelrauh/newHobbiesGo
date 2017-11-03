@@ -7,7 +7,7 @@ import (
 
 var err error
 
-func Start() *gorm.DB {
+func start() *gorm.DB {
   db, err := gorm.Open("sqlite3", "test.db")
 	if err != nil {
 		panic("failed to connect database")
@@ -18,11 +18,11 @@ func Start() *gorm.DB {
   return db
 }
 
-func Stop(db *gorm.DB) {
+func stop(db *gorm.DB) {
   db.Close()
 }
 
-func AddUser(db *gorm.DB, guid string) {
+func addUser(db *gorm.DB, guid string) {
   db.Create(&user{GUID: guid})
 }
 
