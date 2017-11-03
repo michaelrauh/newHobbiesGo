@@ -3,9 +3,10 @@ package main
 import (
 	"net/http"
 	"net/http/httptest"
-	"testing"
-	"github.com/gin-gonic/gin"
 	"os"
+	"testing"
+
+	"github.com/gin-gonic/gin"
 )
 
 func TestMain(m *testing.M) {
@@ -15,13 +16,13 @@ func TestMain(m *testing.M) {
 
 func TestThatnewUserReturnsOK(t *testing.T) {
 	oldGen := gen
-	defer func () { gen = oldGen }()
+	defer func() { gen = oldGen }()
 
 	gen = func(in int) string {
 		if in != 6 {
 			t.Errorf("length of id not what expected, got: %d, want: %d.", in, 6)
 		}
-  	return "abc123"
+		return "abc123"
 	}
 
 	r := gin.Default()
