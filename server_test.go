@@ -16,6 +16,18 @@ func TestMain(m *testing.M) {
 }
 
 func TestMainFunction(t *testing.T) {
+	var startedDB = false
+	oldSt := st
+	defer func() { st = oldSt }()
+
+	st = func(kind, loc string) *gorm.DB {
+		if kind != "sqlite3" || loc != "test.db" {
+			t.Fail()
+		}
+		startedDB = true
+		return nil
+	}
+
 	var got = false
 	oldGet := get
 	defer func() { get = oldGet }()
@@ -38,15 +50,16 @@ func TestMainFunction(t *testing.T) {
 	}
 
 	main()
-	if db == nil {
-		t.Fail()
-	}
 
 	if !done {
 		t.Fail()
 	}
 
 	if !got {
+		t.Fail()
+	}
+
+	if !startedDB {
 		t.Fail()
 	}
 }

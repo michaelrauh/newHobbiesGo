@@ -6,7 +6,7 @@ import (
 )
 
 func TestThatStartingTheDatabaseDoesntResultInPanic(t *testing.T) {
-	db := start("sqlite3", "test.db")
+	db = start("sqlite3", "test.db")
 
 	if db == nil {
 		t.Fail()
@@ -16,7 +16,7 @@ func TestThatStartingTheDatabaseDoesntResultInPanic(t *testing.T) {
 }
 
 func TestThatAddUserCreatesANewUser(t *testing.T) {
-	db := start("sqlite3", "test.db")
+	db = start("sqlite3", "test.db")
 	var count int
 	addUser(db, "some_guid")
 	db.Table("users").Count(&count)
@@ -40,5 +40,4 @@ func TestThatStartCanPanic(t *testing.T) {
 	}()
 
 	start("foolite", "nope")
-
 }
