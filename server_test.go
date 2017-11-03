@@ -46,7 +46,7 @@ func TestThatnewUserReturnsOK(t *testing.T) {
 	}
 
 	if w.Body.String() != "{\"userID\":\"abc123\"}" {
-		t.Errorf("body on GET of newUser was incorrect, got: %d, want: %d.", w.Body.String(), "{\"userID\":\"abc123\"}")
+		t.Errorf("body on GET of newUser was incorrect, got: %s, want: %s.", w.Body.String(), "{\"userID\":\"abc123\"}")
 	}
 
 	if !called {
