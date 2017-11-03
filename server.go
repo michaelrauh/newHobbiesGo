@@ -9,11 +9,13 @@ var r = gin.Default()
 var gen = Generate
 var add = addUser
 var db *gorm.DB
+var run = r.Run
+var get = r.GET
 
 func main() {
 	db = start("sqlite3", "test.db")
-	r.GET("/newUser", newUser)
-	r.Run()
+	get("/newUser", newUser)
+	run()
 }
 
 func newUser(c *gin.Context) {

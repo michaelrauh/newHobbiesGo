@@ -15,6 +15,42 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
+func TestMainFunction(t *testing.T) {
+	var got = false
+	oldGet := get
+	defer func() { get = oldGet }()
+
+	get = func(relativePath string, handlers ...gin.HandlerFunc) gin.IRoutes {
+		if relativePath != "/newUser" {
+			t.Fail()
+		}
+		got = true
+		return nil
+	}
+
+	var done = false
+	oldRun := run
+	defer func() { run = oldRun }()
+
+	run = func(...string) error {
+		done = true
+		return nil
+	}
+
+	main()
+	if db == nil {
+		t.Fail()
+	}
+
+	if !done {
+		t.Fail()
+	}
+
+	if !got {
+		t.Fail()
+	}
+}
+
 func TestThatnewUserReturnsOK(t *testing.T) {
 	oldGen := gen
 	defer func() { gen = oldGen }()
