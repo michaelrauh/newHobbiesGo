@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 )
 
 func TestMain(m *testing.M) {
@@ -25,6 +26,14 @@ func TestThatnewUserReturnsOK(t *testing.T) {
 		return "abc123"
 	}
 
+	oldAdd := add
+	defer func() { add = oldAdd }()
+	var called = false
+
+	add = func(db *gorm.DB, guid string) {
+		called = true
+	}
+
 	r := gin.Default()
 	r.GET("/newUser", newUser)
 	req, _ := http.NewRequest("GET", "/newUser", nil)
@@ -38,5 +47,9 @@ func TestThatnewUserReturnsOK(t *testing.T) {
 
 	if w.Body.String() != "{\"userID\":\"abc123\"}" {
 		t.Errorf("body on GET of newUser was incorrect, got: %d, want: %d.", w.Body.String(), "{\"userID\":\"abc123\"}")
+	}
+
+	if !called {
+		t.Fail()
 	}
 }
