@@ -11,7 +11,7 @@ var add = addUser
 var db *gorm.DB
 
 func main() {
-	db = start()
+	db = start("sqlite3", "test.db")
 	r.GET("/newUser", newUser)
 	r.Run()
 }

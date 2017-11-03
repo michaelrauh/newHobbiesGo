@@ -1,29 +1,27 @@
 package main
 
 import (
-  "github.com/jinzhu/gorm"
-  _ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
-var err error
-
-func start() *gorm.DB {
-  db, err := gorm.Open("sqlite3", "test.db")
+func start(database, name string) *gorm.DB {
+	db, err := gorm.Open(database, name)
 	if err != nil {
 		panic("failed to connect database")
 	}
 
 	db.AutoMigrate(&user{})
 
-  return db
+	return db
 }
 
 func stop(db *gorm.DB) {
-  db.Close()
+	db.Close()
 }
 
 func addUser(db *gorm.DB, guid string) {
-  db.Create(&user{GUID: guid})
+	db.Create(&user{GUID: guid})
 }
 
 type user struct {
