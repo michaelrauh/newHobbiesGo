@@ -6,27 +6,16 @@ import (
 )
 
 var r = gin.Default()
-var gen = Generate
-var add = addUser
+
 var db *gorm.DB
 var run = r.Run
 var get = r.GET
 var st = start
-var ex = exist
 
 func main() {
 	db = st("sqlite3", "test.db")
 	get("/newUser", newUser)
 	run()
-}
-
-func tryToAdd() bool {
-	guid := gen(6)
-	existsAlready := ex(db, guid)
-	if !existsAlready {
-		add(db, guid)
-	}
-	return !existsAlready
 }
 
 func newUser(c *gin.Context) {
