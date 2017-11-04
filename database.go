@@ -12,6 +12,7 @@ func start(database, name string) *gorm.DB {
 	}
 
 	db.AutoMigrate(&user{})
+	db.AutoMigrate(&hobby{})
 
 	return db
 }
@@ -30,7 +31,22 @@ func addUser(db *gorm.DB, guid string) {
 	db.Create(&user{GUID: guid})
 }
 
+func addHobby(db *gorm.DB, text string) {
+	db.Create(&hobby{Text: text})
+}
+
+func allHobbies(db *gorm.DB) []hobby {
+	var hobbies []hobby
+	db.Find(&hobbies)
+	return hobbies
+}
+
 type user struct {
 	gorm.Model
 	GUID string
+}
+
+type hobby struct {
+	gorm.Model
+	Text string
 }

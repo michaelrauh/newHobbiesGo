@@ -63,3 +63,30 @@ func TestThatStartCanPanic(t *testing.T) {
 
 	start("foolite", "nope")
 }
+
+func TestThatAddHobbyCreatesANewHobby(t *testing.T) {
+	db = start("sqlite3", "test.db")
+	addHobby(db, "some description")
+	var hobbies []hobby
+	db.Find(&hobbies)
+	if len(hobbies) != 1 || hobbies[0].Text != "some description" {
+		t.Fail()
+	}
+
+	stop(db)
+	os.Remove("test.db")
+}
+
+func TestThatAllHobbiesGetsAllHobbies(t *testing.T) {
+	db = start("sqlite3", "test.db")
+
+	addHobby(db, "some description")
+	addHobby(db, "other description")
+
+	res := allHobbies(db)
+	if len(res) != 2 || res[1].Text != "other description" {
+		t.Fail()
+	}
+	stop(db)
+	os.Remove("test.db")
+}
