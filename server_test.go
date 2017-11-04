@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -16,6 +17,17 @@ func TestMain(m *testing.M) {
 }
 
 func TestMainFunction(t *testing.T) {
+	calledAddH := false
+	oldAddH := addH
+	defer func() { addH = oldAddH }()
+
+	addH = func(db *gorm.DB, in string) {
+		if in != "text" {
+			t.Fail()
+		}
+		calledAddH = true
+	}
+
 	var startedDB = false
 	oldSt := st
 	defer func() { st = oldSt }()
@@ -33,7 +45,7 @@ func TestMainFunction(t *testing.T) {
 	defer func() { get = oldGet }()
 
 	get = func(relativePath string, handlers ...gin.HandlerFunc) gin.IRoutes {
-		if relativePath != "/newUser" {
+		if !(relativePath == "/newUser" || relativePath == "/hobbies") {
 			t.Fail()
 		}
 		got = true
@@ -60,6 +72,10 @@ func TestMainFunction(t *testing.T) {
 	}
 
 	if !startedDB {
+		t.Fail()
+	}
+
+	if !calledAddH {
 		t.Fail()
 	}
 }
@@ -90,6 +106,32 @@ func TestThatnewUserReturnsOK(t *testing.T) {
 	}
 
 	if !called {
+		t.Fail()
+	}
+}
+
+func TestThatHobbiesReturnsOK(t *testing.T) {
+	oldAllH := allH
+	defer func() { allH = oldAllH }()
+
+	allH = func(db *gorm.DB) []hobby {
+		hobbies := [2]hobby{hobby{Text: "this is a hobby"}}
+		var s = hobbies[0:1]
+		return s
+	}
+
+	r := gin.Default()
+	r.GET("/hobbies", hobbies)
+	req, _ := http.NewRequest("GET", "/hobbies", nil)
+	w := httptest.NewRecorder()
+
+	r.ServeHTTP(w, req)
+
+	if w.Code != 200 {
+		t.Errorf("Status code on GET of hobbies was incorrect, got: %d, want: %d.", w.Code, 200)
+	}
+
+	if !strings.Contains(w.Body.String(), "this is a hobby") {
 		t.Fail()
 	}
 }
