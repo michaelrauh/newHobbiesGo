@@ -16,6 +16,12 @@ func start(database, name string) *gorm.DB {
 	return db
 }
 
+func exist(db *gorm.DB, guid string) bool {
+	var u user
+	db.Where("GUID = ?", guid).First(&u)
+	return u.ID != 0
+}
+
 func stop(db *gorm.DB) {
 	db.Close()
 }

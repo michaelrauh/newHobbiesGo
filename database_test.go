@@ -27,6 +27,28 @@ func TestThatAddUserCreatesANewUser(t *testing.T) {
 	os.Remove("test.db")
 }
 
+func TestThatExistsReturnsTrueWhenGUIDIsUsedAndFalseOtherwise(t *testing.T) {
+	var found bool
+	db = start("sqlite3", "test.db")
+
+	found = exist(db, "some_guid")
+
+	if found {
+		t.Fail()
+	}
+
+	addUser(db, "some_guid")
+
+	found = exist(db, "some_guid")
+
+	if !found {
+		t.Fail()
+	}
+
+	stop(db)
+	os.Remove("test.db")
+}
+
 func TestThatStartCanPanic(t *testing.T) {
 
 	defer func() {
