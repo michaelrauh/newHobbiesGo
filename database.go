@@ -35,6 +35,14 @@ func addHobby(db *gorm.DB, text string) {
 	db.Create(&hobby{Text: text})
 }
 
+func addRelatedHobby(db *gorm.DB, text, requisite string) {
+	var otherHobby hobby
+
+	db.First(&otherHobby, "Text = ?", requisite)
+
+	db.Create(&hobby{Text: text, Prerequisite: otherHobby.ID})
+}
+
 func allHobbies(db *gorm.DB) []hobby {
 	var hobbies []hobby
 	db.Find(&hobbies)
@@ -48,5 +56,6 @@ type user struct {
 
 type hobby struct {
 	gorm.Model
-	Text string
+	Text         string
+	Prerequisite uint
 }

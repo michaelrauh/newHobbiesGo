@@ -17,6 +17,18 @@ func TestMain(m *testing.M) {
 }
 
 func TestMainFunction(t *testing.T) {
+
+	calledAddRelated := false
+	oldAddRelated := addRelated
+	defer func() { addRelated = oldAddRelated }()
+
+	addRelated = func(db *gorm.DB, in, rel string) {
+		if rel != "text" || in != "other" {
+			t.Fail()
+		}
+		calledAddRelated = true
+	}
+
 	calledAddH := false
 	oldAddH := addH
 	defer func() { addH = oldAddH }()
@@ -76,6 +88,10 @@ func TestMainFunction(t *testing.T) {
 	}
 
 	if !calledAddH {
+		t.Fail()
+	}
+
+	if !calledAddRelated {
 		t.Fail()
 	}
 }

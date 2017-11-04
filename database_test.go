@@ -90,3 +90,17 @@ func TestThatAllHobbiesGetsAllHobbies(t *testing.T) {
 	stop(db)
 	os.Remove("test.db")
 }
+
+func TestThatAddRelatedHobbyFindsAReferenceToOtherHobby(t *testing.T) {
+	db = start("sqlite3", "test.db")
+
+	addHobby(db, "some description")
+	addRelatedHobby(db, "other description", "some description")
+
+	if allHobbies(db)[1].Prerequisite != 1 {
+		t.Fail()
+	}
+
+	stop(db)
+	os.Remove("test.db")
+}

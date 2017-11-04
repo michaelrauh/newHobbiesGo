@@ -14,10 +14,12 @@ var st = start
 var addUniq = addUnique
 var addH = addHobby
 var allH = allHobbies
+var addRelated = addRelatedHobby
 
 func main() {
 	db = st("sqlite3", "test.db")
 	addH(db, "text")
+	addRelated(db, "other", "text")
 	get("/newUser", newUser)
 	get("/hobbies", hobbies)
 
