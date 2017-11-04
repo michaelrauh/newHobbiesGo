@@ -11,6 +11,7 @@ var db *gorm.DB
 var run = r.Run
 var get = r.GET
 var st = start
+var addUniq = addUnique
 
 func main() {
 	db = st("sqlite3", "test.db")
@@ -19,10 +20,8 @@ func main() {
 }
 
 func newUser(c *gin.Context) {
-	var guid = gen(6)
-	add(db, guid)
 	c.JSON(200, gin.H{
-		"userID": guid,
+		"userID": addUniq(db),
 	},
 	)
 }
