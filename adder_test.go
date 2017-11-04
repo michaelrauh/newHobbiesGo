@@ -35,9 +35,13 @@ func TestThatTryToAddWillAddAGUID(t *testing.T) {
 		return false
 	}
 
-	res := tryToAdd(db)
+	ok, res := tryToAdd(db)
 
-	if !called || !res {
+	if !called || !ok {
+		t.Fail()
+	}
+
+	if len(res) < 6 {
 		t.Fail()
 	}
 }
@@ -58,9 +62,9 @@ func TestThatTryToAddWillNotAddAUsedGUID(t *testing.T) {
 		return true
 	}
 
-	res := tryToAdd(db)
+	ok, _ := tryToAdd(db)
 
-	if called || res {
+	if called || ok {
 		t.Fail()
 	}
 }
